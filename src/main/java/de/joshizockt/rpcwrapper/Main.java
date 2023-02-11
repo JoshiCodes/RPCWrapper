@@ -1,34 +1,25 @@
 package de.joshizockt.rpcwrapper;
 
-import de.joshizockt.rpcwrapper.config.YamlConfig;
-import net.arikia.dev.drpc.DiscordEventHandlers;
+import de.joshizockt.rpcwrapper.commands.RefreshCommand;
+import de.joshizockt.rpcwrapper.commands.RestartCommand;
+import de.joshizockt.rpcwrapper.commands.StopCommand;
+import de.joshizockt.rpcwrapper.util.command.CommandManager;
+import de.joshizockt.rpcwrapper.commands.HelpCommand;
 import net.arikia.dev.drpc.DiscordRPC;
-import net.arikia.dev.drpc.DiscordRichPresence;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Main {
 
-    public static void main(String[] args) {
-        YamlConfig config = new YamlConfig(new File("config.yml"));
-        config.copyDefaults();
+    public static void main(String[] startupArgs) {
 
-
-        // Starting RPC
-        DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().setReadyEventHandler((user) -> {
-            System.out.println("Ready for User " + user.username + "#" + user.discriminator + " (" + user.userId + ")!");
-
-            // Initial Presence
-            DiscordRichPresence presence = new DiscordRichPresence.Builder(config.get("defaults.rpc.state") + "").setBigImage("logo", "RPCWrapper").setDetails(config.get("defaults.rpc.details") + "").setStartTimestamps(System.currentTimeMillis() / 1000).build();
-            updatePresence(presence);
-
-        }).build();
-        DiscordRPC.discordInitialize(config.get("defaults.rpc.clientId") + "", handlers, true);
-
+        new RPCWrapper();
         // Run Callbacks
-        int interval = config.getInt("timings.updateInterval", 1000);
+        int interval = RPCWrapper.getInstance().getConfig().getInt("timings.updateInterval", 1000);
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -36,10 +27,30 @@ public class Main {
             }
         }, interval, interval);
 
-    }
 
-    public static void updatePresence(DiscordRichPresence presence) {
-        DiscordRPC.discordUpdatePresence(presence);
+        CommandManager commandManager = CommandManager.getInstance();
+
+        commandManager.registerCommand(new StopCommand());
+        commandManager.registerCommand(new HelpCommand());
+        commandManager.registerCommand(new RefreshCommand());
+        commandManager.registerCommand(new RestartCommand());
+
+        // Read Console
+        new Thread(() -> {
+            while(true) {
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                    String line = reader.readLine();
+                    String[] args = line.split(" ");
+
+                    commandManager.handle(args);
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
+
     }
 
 }

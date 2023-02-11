@@ -1,4 +1,4 @@
-package de.joshizockt.rpcwrapper.config;
+package de.joshizockt.rpcwrapper.util.config;
 
 import org.yaml.snakeyaml.Yaml;
 
