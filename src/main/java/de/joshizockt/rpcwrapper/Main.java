@@ -1,10 +1,7 @@
 package de.joshizockt.rpcwrapper;
 
-import de.joshizockt.rpcwrapper.commands.RefreshCommand;
-import de.joshizockt.rpcwrapper.commands.RestartCommand;
-import de.joshizockt.rpcwrapper.commands.StopCommand;
+import de.joshizockt.rpcwrapper.commands.*;
 import de.joshizockt.rpcwrapper.util.command.CommandManager;
-import de.joshizockt.rpcwrapper.commands.HelpCommand;
 import net.arikia.dev.drpc.DiscordRPC;
 
 import java.io.BufferedReader;
@@ -34,6 +31,7 @@ public class Main {
         commandManager.registerCommand(new HelpCommand());
         commandManager.registerCommand(new RefreshCommand());
         commandManager.registerCommand(new RestartCommand());
+        commandManager.registerCommand(new PresetCommand());
 
         // Read Console
         new Thread(() -> {
@@ -44,7 +42,6 @@ public class Main {
                     String[] args = line.split(" ");
 
                     commandManager.handle(args);
-
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

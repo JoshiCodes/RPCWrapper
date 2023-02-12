@@ -209,4 +209,13 @@ public class YamlConfig  {
         return file;
     }
 
+    public long getLong(String s, long i) {
+
+        Object o = get(s);
+        if(o instanceof Long) return (Long) o;
+        if(o instanceof Integer) return (Integer) o;
+        return i;
+
+    }
+
 }

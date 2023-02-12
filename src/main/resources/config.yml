@@ -3,7 +3,7 @@
 defaults:
   rpc:
     clientId: 1073729155625144442
-    state: "RPCWrapper - Customize in config.yml"
+    state: "github.com/JoshiCodes/RPCWrapper"
     details: "created by @JoshiCodes on GitHub"
 
 
@@ -24,12 +24,12 @@ presets:
   # Example Preset
   # Commented out or optional values can be removed
   example:
-    #clientId: 123456789012345678 # Optional, leave blank or remove/comment to use default
-    state: "Example State"
-    details: "Example Details" # Optional
-    largeImageKey: "logo" # Optional, Be sure to add the image in the Developer Portal
+    #clientId: 123456789012345678      # Optional, leave blank or remove/comment to use default
+    state: "Example State"             # Required
+    details: "Example Details"         # Optional
+    largeImage: "logo"                 # Optional, Be sure to add the image in the Developer Portal
     largeImageText: "Large Image Text" # Optional
-    smallImageKey: "logo" # Optional, Be sure to add the image in the Developer Portal
+    smallImage: "logo"                  # Optional, Be sure to add the image in the Developer Portal
     smallImageText: "Small Image Text" # Optional
-    startTimestamp: 0 # Optional, 0 = current time
-    endTimestamp: 0 # Optional, 0 = current time
+    startTimestamp: 0                  # Optional, 0 = current time
+    endTimestamp: -1                   # Optional, -1 or 0 = no end time
